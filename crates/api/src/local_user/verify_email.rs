@@ -35,6 +35,6 @@ impl Perform for VerifyEmail {
 
     EmailVerification::delete_old_tokens_for_local_user(context.pool(), local_user_id).await?;
 
-    Ok(VerifyEmailResponse {})
+    Ok(VerifyEmailResponse { id: local_user_id })
   }
 }

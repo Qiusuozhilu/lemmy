@@ -6,3 +6,4 @@ ansible
 tests
 *.sh
 pictrs
+*.tar

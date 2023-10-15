@@ -1,0 +1,62 @@
+version: '3.7'
+
+x-logging: &default-logging
+  driver: 'json-file'
+  options:
+    max-size: '50m'
+    max-file: '4'
+
+services:
+  pictrs:
+    image: asonix/pictrs:0.4.0-beta.19
+    # this needs to match the pictrs url in lemmy.hjson
+    hostname: pictrs
+    # we can set options to pictrs like this, here we set max. image size and forced format for conversion
+    # entrypoint: /sbin/tini -- /usr/local/bin/pict-rs -p /mnt -m 4 --image-format webp
+    environment:
+      - PICTRS_OPENTELEMETRY_URL=http://otel:4137
+      - PICTRS__API_KEY=API_KEY
+      - RUST_LOG=debug
+      - RUST_BACKTRACE=full
+      - PICTRS__MEDIA__VIDEO_CODEC=vp9
+      - PICTRS__MEDIA__GIF__MAX_WIDTH=256
+      - PICTRS__MEDIA__GIF__MAX_HEIGHT=256
+      - PICTRS__MEDIA__GIF__MAX_AREA=65536
+      - PICTRS__MEDIA__GIF__MAX_FRAME_COUNT=400
+    user: 991:991
+    volumes:
+      - ./volumes/pictrs:/mnt:Z
+    restart: always
+    logging: *default-logging
+
+  postgres:
+    image: postgres:15-alpine
+    # this needs to match the database host in lemmy.hson
+    # Tune your settings via
+    # https://pgtune.leopard.in.ua/#/
+    # You can use this technique to add them here
+    # https://stackoverflow.com/a/30850095/1655478
+    hostname: postgres
+    command:
+      [
+        'postgres',
+        '-c',
+        'session_preload_libraries=auto_explain',
+        '-c',
+        'auto_explain.log_min_duration=5ms',
+        '-c',
+        'auto_explain.log_analyze=true',
+        '-c',
+        'track_activity_query_size=1048576',
+      ]
+    ports:
+      # use a different port so it doesnt conflict with potential postgres db running on the host
+      - '5433:5432'
+    environment:
+      - POSTGRES_USER=lemmy
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=lemmy
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data:Z
+    restart: always
+    logging: *default-logging

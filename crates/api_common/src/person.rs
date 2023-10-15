@@ -1,6 +1,6 @@
 use crate::sensitive::Sensitive;
 use lemmy_db_schema::{
-  newtypes::{CommentReplyId, CommunityId, LanguageId, PersonId, PersonMentionId},
+  newtypes::{CommentReplyId, CommunityId, LanguageId, LocalUserId, PersonId, PersonMentionId},
   CommentSortType,
   ListingType,
   SortType,
@@ -448,4 +448,6 @@ pub struct VerifyEmail {
 #[cfg_attr(feature = "full", derive(TS))]
 #[cfg_attr(feature = "full", ts(export))]
 /// A response to verifying your email.
-pub struct VerifyEmailResponse {}
+pub struct VerifyEmailResponse {
+  pub id: LocalUserId,
+}
