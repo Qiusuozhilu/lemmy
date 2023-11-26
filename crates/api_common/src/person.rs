@@ -41,6 +41,8 @@ pub struct Register {
   pub show_nsfw: bool,
   /// email is mandatory if email verification is enabled on the server
   pub email: Option<Sensitive<String>>,
+  /// phone_number is mandatory if phone verification is enabled on the server
+  pub phone_number: Option<Sensitive<String>>,
   /// The UUID of the captcha item.
   pub captcha_uuid: Option<String>,
   /// Your captcha answer.
@@ -107,6 +109,8 @@ pub struct SaveUserSettings {
   pub display_name: Option<String>,
   /// Your email.
   pub email: Option<Sensitive<String>>,
+  /// Your phone number.
+  pub phone_number: Option<Sensitive<String>>,
   /// Your bio / info, in markdown.
   pub bio: Option<String>,
   /// Your matrix user id. Ex: @my_user:matrix.org

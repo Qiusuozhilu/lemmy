@@ -10,8 +10,14 @@
     admin_password: "lemmylemmy"
     site_name: "lemmy-dev"
   }
+
   database: {
-    host: postgres
+    host: "localhost"
+    port: 9031
+    database: "lemmy"
+    user: "lemmy"
+    password: "postgres"
+    pool_size: 5
   }
 
   hostname: "localhost"
@@ -19,9 +25,9 @@
   port: 8536
 
   pictrs: {
-    url: "http://pictrs:8080/"
-    # api_key: "API_KEY"
+    url: "http://localhost:9032/"
+    api_key: "local_pictrs"
   }
 
-  #opentelemetry_url: "http://otel:4137"
+  # opentelemetry_url: "http://otel:4137"
 }

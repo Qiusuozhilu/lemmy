@@ -1,6 +1,6 @@
 use crate::{
   newtypes::LocalSiteId,
-  schema::tagline::dsl::{local_site_id, tagline},
+  schema::tagline::dsl::*,
   source::tagline::{Tagline, TaglineForm},
   utils::{get_conn, DbPool},
 };

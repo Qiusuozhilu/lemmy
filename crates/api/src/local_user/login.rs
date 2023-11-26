@@ -40,6 +40,13 @@ impl Perform for Login {
       local_user_view.person.deleted,
     )?;
 
+    // Check if the user has an email.
+    // Users who migrated from old site usually do not have email.
+    if site_view.local_site.require_email_verification && local_user_view.local_user.email.is_none()
+    {
+      return Err(LemmyError::from_message("email_not_exist"));
+    }
+
     // Check if the user's email is verified if email verification is turned on
     // However, skip checking verification if the user is an admin
     if !local_user_view.person.admin

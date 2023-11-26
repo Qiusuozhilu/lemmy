@@ -1,10 +1,4 @@
-use crate::{
-  diesel::Connection,
-  diesel_migrations::MigrationHarness,
-  newtypes::DbUrl,
-  CommentSortType,
-  SortType,
-};
+use crate::{newtypes::DbUrl, CommentSortType, SortType};
 use activitypub_federation::{fetch::object_id::ObjectId, traits::Object};
 use chrono::NaiveDateTime;
 use deadpool::Runtime;
@@ -15,6 +9,7 @@ use diesel::{
   result::{ConnectionError, ConnectionResult, Error as DieselError, Error::QueryBuilderError},
   serialize::{Output, ToSql},
   sql_types::Text,
+  Connection,
   PgConnection,
 };
 use diesel_async::{
@@ -24,7 +19,7 @@ use diesel_async::{
     AsyncDieselConnectionManager,
   },
 };
-use diesel_migrations::EmbeddedMigrations;
+use diesel_migrations::{EmbeddedMigrations, MigrationHarness};
 use futures_util::{future::BoxFuture, FutureExt};
 use lemmy_utils::{error::LemmyError, settings::structs::Settings};
 use once_cell::sync::Lazy;
@@ -210,15 +205,19 @@ impl ServerCertVerifier for NoCertVerifier {
 }
 
 pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
+type DB = diesel::pg::Pg;
+fn run_db_migrations(conn: &mut impl MigrationHarness<DB>) {
+  conn
+    .run_pending_migrations(MIGRATIONS)
+    .unwrap_or_else(|e| panic!("Couldn't run DB Migrations: {e}"));
+}
 
 pub fn run_migrations(db_url: &str) {
   // Needs to be a sync connection
   let mut conn =
     PgConnection::establish(db_url).unwrap_or_else(|e| panic!("Error connecting to {db_url}: {e}"));
   info!("Running Database migrations (This may take a long time)...");
-  let _ = &mut conn
-    .run_pending_migrations(MIGRATIONS)
-    .unwrap_or_else(|e| panic!("Couldn't run DB Migrations: {e}"));
+  run_db_migrations(&mut conn);
   info!("Database migrations complete.");
 }
 
