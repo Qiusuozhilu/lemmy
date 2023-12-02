@@ -396,6 +396,8 @@ diesel::table! {
         totp_2fa_url -> Nullable<Text>,
         open_links_in_new_tab -> Bool,
         infinite_scroll_enabled -> Bool,
+        #[max_length = 11]
+        phone_number -> Nullable<Varchar>,
     }
 }
 

@@ -24,6 +24,7 @@ use lemmy_utils::{
     is_valid_bio_field,
     is_valid_display_name,
     is_valid_matrix_id,
+    is_valid_phone_number,
   },
 };
 
@@ -47,6 +48,8 @@ impl Perform for SaveUserSettings {
     let matrix_user_id = diesel_option_overwrite(data.matrix_user_id.clone());
     let email_deref = data.email.as_deref().map(str::to_lowercase);
     let email = diesel_option_overwrite(email_deref.clone());
+    let phone_number_deref = data.phone_number.as_deref().map(str::to_string);
+    let phone_number = diesel_option_overwrite(phone_number_deref.clone());
 
     if let Some(Some(email)) = &email {
       let previous_email = local_user_view.local_user.email.clone().unwrap_or_default();
@@ -55,6 +58,10 @@ impl Perform for SaveUserSettings {
         send_verification_email(&local_user_view, email, context.pool(), context.settings())
           .await?;
       }
+    }
+
+    if let Some(Some(phone_number)) = &phone_number {
+      is_valid_phone_number(phone_number)?;
     }
 
     // When the site requires email, make sure email is not Some(None). IE, an overwrite to a None value
@@ -118,6 +125,7 @@ impl Perform for SaveUserSettings {
 
     let local_user_form = LocalUserUpdateForm::builder()
       .email(email)
+      .phone_number(phone_number)
       .show_avatars(data.show_avatars)
       .show_read_posts(data.show_read_posts)
       .show_new_post_notifs(data.show_new_post_notifs)

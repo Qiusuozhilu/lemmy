@@ -151,6 +151,17 @@ pub fn is_valid_bio_field(bio: &str) -> LemmyResult<()> {
   max_length_check(bio, BIO_MAX_LENGTH, String::from("bio_length_overflow"))
 }
 
+pub fn is_valid_phone_number(phone_number: &String) -> LemmyResult<()> {
+  let is_valid = phone_number.starts_with('1')
+    && phone_number.len() == 11
+    && phone_number.chars().all(|c| c.is_digit(10));
+  if is_valid {
+    Ok(())
+  } else {
+    Err(LemmyError::from_message("phone_number_invalid"))
+  }
+}
+
 /// Checks the site name length, the limit as defined in the DB.
 pub fn site_name_length_check(name: &str) -> LemmyResult<()> {
   min_max_length_check(

@@ -55,6 +55,7 @@ pub struct LocalUser {
   pub open_links_in_new_tab: bool,
   /// Whether infinite scroll is enabled.
   pub infinite_scroll_enabled: bool,
+  pub phone_number: Option<String>,
 }
 
 #[derive(Clone, TypedBuilder)]
@@ -67,6 +68,7 @@ pub struct LocalUserInsertForm {
   #[builder(!default)]
   pub password_encrypted: String,
   pub email: Option<String>,
+  pub phone_number: Option<String>,
   pub show_nsfw: Option<bool>,
   pub theme: Option<String>,
   pub default_sort_type: Option<SortType>,
@@ -93,6 +95,7 @@ pub struct LocalUserInsertForm {
 pub struct LocalUserUpdateForm {
   pub password_encrypted: Option<String>,
   pub email: Option<Option<String>>,
+  pub phone_number: Option<Option<String>>,
   pub show_nsfw: Option<bool>,
   pub theme: Option<String>,
   pub default_sort_type: Option<SortType>,
