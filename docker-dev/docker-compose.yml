@@ -61,3 +61,23 @@ services:
     logging: *default-logging
     ports:
       - '9032:8080'
+  # lemmy-ui:
+  #   image: dessalines/lemmy-ui:0.18.5
+  #   # use this to build your local lemmy ui image for development
+  #   # run docker compose up --build
+  #   # assuming lemmy-ui is cloned besides lemmy directory
+  #   # build:
+  #   #   context: ../../lemmy-ui
+  #   #   dockerfile: dev.dockerfile
+  #   environment:
+  #     # this needs to match the hostname defined in the lemmy service
+  #     - LEMMY_UI_LEMMY_INTERNAL_HOST=localhost:8536
+  #     # set the outside hostname here
+  #     - LEMMY_UI_LEMMY_EXTERNAL_HOST=localhost:1236
+  #     - LEMMY_UI_HTTPS=false
+  #     - LEMMY_UI_DEBUG=true
+  #   depends_on:
+  #     - lemmy
+  #   restart: always
+  #   logging: *default-logging
+  #   init: true

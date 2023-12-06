@@ -1,4 +1,5 @@
 use crate::sensitive::Sensitive;
+use chrono::Local;
 use lemmy_db_schema::{
   newtypes::{CommentReplyId, CommunityId, LanguageId, LocalUserId, PersonId, PersonMentionId},
   CommentSortType,
@@ -51,6 +52,32 @@ pub struct Register {
   pub honeypot: Option<String>,
   /// An answer is mandatory if require application is enabled on the server
   pub answer: Option<String>,
+}
+
+#[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
+#[cfg_attr(feature = "full", derive(TS))]
+#[cfg_attr(feature = "full", ts(export))]
+/// Migrate user to lemmy.
+pub struct Migrate {
+  pub operate_password: String,
+  pub username: String,
+  pub password: Sensitive<String>,
+  pub show_nsfw: bool,
+  /// email is mandatory if email verification is enabled on the server
+  pub email: Option<Sensitive<String>>,
+  /// phone_number is mandatory if phone verification is enabled on the server
+  pub phone_number: Option<Sensitive<String>>,
+}
+
+#[skip_serializing_none]
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[cfg_attr(feature = "full", derive(TS))]
+#[cfg_attr(feature = "full", ts(export))]
+/// A response for your login.
+pub struct MigrateResponse {
+  pub ok: Option<bool>,
+  pub user_id: Option<LocalUserId>,
 }
 
 #[skip_serializing_none]

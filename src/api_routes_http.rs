@@ -45,6 +45,7 @@ use lemmy_api_common::{
     MarkAllAsRead,
     MarkCommentReplyAsRead,
     MarkPersonMentionAsRead,
+    Migrate,
     PasswordChangeAfterReset,
     PasswordReset,
     Register,
@@ -276,6 +277,13 @@ pub fn config(cfg: &mut web::ServiceConfig, rate_limit: &RateLimitCell) {
           .guard(guard::Post())
           .wrap(rate_limit.register())
           .route(web::post().to(route_post_crud::<Register>)),
+      )
+      .service(
+        // Handle /user/migrate separately to add the register() rate limitter
+        web::resource("/user/migrate")
+          .guard(guard::Post())
+          .wrap(rate_limit.register())
+          .route(web::post().to(route_post_crud::<Migrate>)),
       )
       .service(
         // Handle captcha separately

@@ -7,7 +7,9 @@ fork from [lemmyNet/lemmy](https://github.com/LemmyNet/lemmy)
 1. install watch, from binary `cargo binstall cargo-watch` or from source `cargo install cargo-watch`
 2. start collaborative service `docker compose -f ./docker-dev/docker-compose.yml up`
 3. wait database ready
-4. start lemmy service with `cargo watch -x run`
+4. set DATABASE enviroment variable
+   1. LEMMY_DATABASE_URL = "postgres://lemmy:postgres@localhost:9031/lemmy"
+5. start lemmy service with `cargo watch -x run`
 
 ## how deploy server to server manully
 

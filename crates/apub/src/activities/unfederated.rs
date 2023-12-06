@@ -49,6 +49,8 @@ use lemmy_api_common::{
     MarkAllAsRead,
     MarkCommentReplyAsRead,
     MarkPersonMentionAsRead,
+    Migrate,
+    MigrateResponse,
     PasswordChangeAfterReset,
     PasswordReset,
     PasswordResetResponse,
@@ -109,6 +111,10 @@ use lemmy_api_common::{
 
 impl SendActivity for Register {
   type Response = LoginResponse;
+}
+
+impl SendActivity for Migrate {
+  type Response = MigrateResponse;
 }
 
 impl SendActivity for GetPrivateMessages {
